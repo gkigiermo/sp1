@@ -109,7 +109,10 @@ main() {
       ensure unzip "$tmp" -d "$SP1_BIN_DIR"
       rm -f "$tmp"
     else
-      ensure download "$BIN_ARCHIVE_URL" | ensure tar -xzC "$SP1_BIN_DIR"
+      tmp="$(mktemp -d 2>/dev/null || echo ".")/cargo-prove.tar.gz"
+      ensure download "$BIN_ARCHIVE_URL" "$tmp"
+      ensure tar -xzvf "$tmp" -C "$SP1_BIN_DIR"
+      rm -f "$tmp"
     fi
 
     for bin in "${BINS[@]}"; do
